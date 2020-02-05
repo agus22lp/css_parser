@@ -350,11 +350,13 @@ module CssParser
       # have a background-position property, so we set it if it's missing.
       # http://www.w3schools.com/cssref/css3_pr_background.asp
       if @declarations.has_key?('background-size') and not @declarations['background-size'][:is_important]
-        unless @declarations.has_key?('background-position')
-          @declarations['background-position'] = {:value => '0% 0%'}
-        end
+        unless ['auto','length', 'cover', 'contain', 'initial', 'inherit'].include?(@declarations['background-size'][:value])
+          unless @declarations.has_key?('background-position')
+            @declarations['background-position'] = {:value => '0% 0%'}
+          end
 
-        @declarations['background-size'][:value] = "/ #{@declarations['background-size'][:value]}"
+          @declarations['background-size'][:value] = "/ #{@declarations['background-size'][:value]}"
+        end
       end
 
       create_shorthand_properties! BACKGROUND_PROPERTIES, 'background'
